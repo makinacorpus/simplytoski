@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Proposition de fond de plan : Simply To Ski</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css" />
+  <style>
+    body, html {
+      height: 100%;
+    }
+
+    body {
+      margin: 0;
+    }
+    
+    #map {
+      height: 100%;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="map"></div>
+
+  <script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
+  <script type="text/javascript">
+    var map = L.map('map', {center: [45.01, 6.12], zoom: 16, minZoom: 15});
+    map.setMaxBounds(new L.LatLngBounds(new L.LatLng(45.0003,6.098),new L.LatLng(45.0401,6.1553)));
+
+    L.tileLayer('http://{s}.livembtiles.makina-corpus.net/makina/OSM_snow_a6e8fa/{z}/{x}/{y}.png', {
+      attribution:' Par <a href="http://www.makina-corpus.com" target="_blank">Makina Corpus</a> | &copy; Contributeurs <a href="http://osm.org/copyright" target="_blank">OpenStreetMap</a>'
+    }).addTo(map);
+  </script>
+</body>
+</html>
