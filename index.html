@@ -5,6 +5,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css" />
+  <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
   <style>
     body, html {
       height: 100%;
@@ -17,19 +18,127 @@
     #map {
       height: 100%;
     }
+    
+    #panel {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+      width: 400px;
+      background: white;
+      box-shadow: 0 0 5px 0;
+      padding: 25px;
+    }
+
+    .logo {
+      width: 350px;
+    }
+
+    .logo2 {
+      width: 250px;
+    }
+
+    #nomResidence {
+      margin-top: 50px;
+      width: 350px;
+    }
+
+    #bottom {
+      position: absolute;
+      bottom: 20px;
+    }
   </style>
 </head>
 
 <body>
   <div id="map"></div>
+  <div class="text-center"  id="panel">
+    <h3>Vos commerces dans la station</h3>
+    <img class="logo" src="img/logo-les-2-alpes.jpeg">
+    <div class="form-group">
+      <input type="text" class="form-control" id="nomResidence" placeholder="Chercher votre résidence (non implémenté)">
+    </div>
+    <div id="bottom">
+    <h4>Un service</h4>
+    <img class="logo" src="img/simplytoski.png">
+    <h5>Proposition par</h5>
+    <img class="logo2" src="img/makinacorpus.png">
+    </div>
+  </div>
 
   <script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
+  <script src="data/esf.js"></script>
+  <script src="data/loueurs.js"></script>
+  <script src="data/ot.js"></script>
+  <script src="data/residences.js"></script>
   <script type="text/javascript">
-    var map = L.map('map', {center: [45.01, 6.12], zoom: 16, minZoom: 15});
+    var map = L.map('map', {center: [45.01, 6.127], zoom: 16, minZoom: 15});
     map.setMaxBounds(new L.LatLngBounds(new L.LatLng(45.0003,6.098),new L.LatLng(45.0401,6.1553)));
 
-    L.tileLayer('http://{s}.livembtiles.makina-corpus.net/makina/OSM_snow_a6e8fa/{z}/{x}/{y}.png', {
+    L.tileLayer('http://{s}.livembtiles.makina-corpus.net/makina/OSM_snow_c87ec7/{z}/{x}/{y}.png', {
       attribution:' Par <a href="http://www.makina-corpus.com" target="_blank">Makina Corpus</a> | &copy; Contributeurs <a href="http://osm.org/copyright" target="_blank">OpenStreetMap</a>'
+    }).addTo(map);
+
+    function onEachFeature(feature, layer) {
+      var content = "";
+      if (feature.properties && feature.properties.nom) {
+         content += "<h3>" + feature.properties.nom + "</h3>";
+      }
+      content += "<i>Plus d'informations seront incluses dans la popup</i>"
+      layer.bindPopup(content);
+    }
+
+var otIcon = L.icon({
+    iconUrl: 'img/ot.png',
+    iconSize:     [40, 40], // size of the icon
+    iconAnchor:   [20, 20], // point of the icon which will correspond to marker's location
+    popupAnchor:  [0, -20] // point from which the popup should open relative to the iconAnchor
+});
+
+var loueursIcon = L.icon({
+    iconUrl: 'img/loueurs.png',
+    iconSize:     [40, 40], // size of the icon
+    iconAnchor:   [20, 20], // point of the icon which will correspond to marker's location
+    popupAnchor:  [0, -20] // point from which the popup should open relative to the iconAnchor
+});
+
+var residencesIcon = L.icon({
+    iconUrl: 'img/residences.png',
+    iconSize:     [40, 40], // size of the icon
+    iconAnchor:   [20, 20], // point of the icon which will correspond to marker's location
+    popupAnchor:  [0, -20] // point from which the popup should open relative to the iconAnchor
+});
+
+var esfIcon = L.icon({
+    iconUrl: 'img/esf.png',
+    iconSize:     [44, 43], // size of the icon
+    iconAnchor:   [22, 22], // point of the icon which will correspond to marker's location
+    popupAnchor:  [0, -22] // point from which the popup should open relative to the iconAnchor
+});
+
+    var esf = L.geoJson(esf, {
+      onEachFeature: onEachFeature,
+      pointToLayer: function (feature, latlng) {
+        return L.marker(latlng, {icon: esfIcon});
+      }
+    }).addTo(map);
+    var loueurs = L.geoJson(loueurs, {
+      onEachFeature: onEachFeature,
+      pointToLayer: function (feature, latlng) {
+        return L.marker(latlng, {icon: loueursIcon});
+      }
+    }).addTo(map);
+    var ot = L.geoJson(ot, {
+      onEachFeature: onEachFeature,
+      pointToLayer: function (feature, latlng) {
+        return L.marker(latlng, {icon: otIcon});
+      }
+    }).addTo(map);
+    var residences = L.geoJson(residences, {
+      onEachFeature: onEachFeature,
+      pointToLayer: function (feature, latlng) {
+        return L.marker(latlng, {icon: residencesIcon});
+      }
     }).addTo(map);
   </script>
 </body>
